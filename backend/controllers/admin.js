@@ -45,3 +45,15 @@ export const addLecture = Trycatch(async (req, res) => {
     }
 }
 );
+
+
+export const getAllLectures = Trycatch(async (req, res) => {
+    try{
+        const lectures = await Lecture.find();
+        res.status(200).json({lectures});
+    }catch(error){
+        console.log(error);
+    }
+    }
+    );
+    

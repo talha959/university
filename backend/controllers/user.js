@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Trycatch from "../middleware/Trycatch.js";
 import dotenv from "dotenv";
-import { resolveContent } from "nodemailer/lib/shared/index.js";
+// import { resolveContent } from "nodemailer/lib/shared/index.js";
 dotenv.config();
 
 export const register = Trycatch(async (req, res) => {
@@ -58,7 +58,7 @@ export const login = Trycatch(async (req, res) => {
             return res.status(400).json("Password is incorrect");
         }
         const token = jwt.sign(
-            { email: existingUser.email, id: existingUser._id ,resolveContent }, 
+            { existingUser  }, 
             process.env.JWT_SECRET, 
             { expiresIn: "24h" } 
         );
