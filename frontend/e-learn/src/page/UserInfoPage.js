@@ -4,11 +4,12 @@ import Cookies from "js-cookie";
 
 const UserInfoPage = ({  }) => {
   const [users, setUsers] = React.useState(null);
-
+  const [tokens, setTokens] = React.useState(null);
   React.useEffect(() => {
     
     const getAndDecodeToken = () => {
       const token = Cookies.get("token");
+      setTokens(token);
       if (!token) {
         console.error("No token found in cookies.");
         return null;
@@ -101,20 +102,27 @@ const UserInfoPage = ({  }) => {
         </div>
         <button
         onClick={async () => {
-          try {
-          const response = await fetch('http://localhost:4000/api/logout', {
-            method: 'POST',
-            credentials: 'include',
-            application: 'application/json',
-          });
-          if (response.ok) {
-            window.location.href = '/login';
-          } else {
-            console.error('Logout failed');
-          }
-          } catch (error) {
-          console.error('Error:', error);
-          }
+            if (!tokens) {
+              alert('User not logged in');
+              return;
+            }
+            try {
+            const response = await fetch('http://localhost:4000/api/logout', {
+              method: 'POST',
+              headers: {
+              Authorization: `Bearer ${tokens}`,
+              'Content-Type': 'application/json',
+              },
+            });
+            if (response.ok) {
+              Cookies.remove('token');
+              window.location.href = '/login';
+            } else {
+              console.error('Logout failed');
+            }
+            } catch (error) {
+            console.error('Error:', error);
+            }
         }}
         className="ml-4 text-red-500 hover:underline focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
         >

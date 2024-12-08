@@ -31,10 +31,19 @@ const RegistrationPage = () => {
 
   // Handle country selection and fetch states for selected country
   const handleCountryChange = (e) => {
-    const countryId = e.target.value;
-    setFormData({ ...formData, country: countryId, state: "" });
-    GetState(countryId).then((result) => setStatesList(result));
+    const countryName = e.target.value; // Get the selected country name
+    setFormData({ ...formData, country: countryName, state: "" });
+  
+    // Find the selected country's ID to fetch states
+    const selectedCountry = countriesList.find(
+      (country) => country.name === countryName
+    );
+  
+    if (selectedCountry) {
+      GetState(selectedCountry.id).then((result) => setStatesList(result));
+    }
   };
+  
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -110,24 +119,25 @@ const RegistrationPage = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Country
-            </label>
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleCountryChange}
-              className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="">Select Country</option>
-              {countriesList.map((country) => (
-                <option key={country.id} value={country.id}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </div>
+  <label className="block text-sm font-medium text-gray-700">
+    Country
+  </label>
+  <select
+    name="country"
+    value={formData.country}
+    onChange={handleCountryChange}
+    className="w-full mt-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+    required
+  >
+    <option value="">Select Country</option>
+    {countriesList.map((country) => (
+      <option key={country.id} value={country.name}>
+        {country.name}
+      </option>
+    ))}
+  </select>
+</div>
+
 
           <button
             type="submit"
