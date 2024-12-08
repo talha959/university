@@ -6,7 +6,7 @@ dotenv.config();
 
 export const isAuth = Trycatch(async (req, res, next) => {
     // Access the token from cookies
-    const token= req.cookies.token;
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
     console.log("Token:", token); // Debug log to verify token presence
 
     if (!token) {

@@ -35,13 +35,26 @@ const RegistrationPage = () => {
     setFormData({ ...formData, country: countryId, state: "" });
     GetState(countryId).then((result) => setStatesList(result));
   };
-  console.log(setStatesList);
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted Data:", formData);
-    // Add your API integration here
+
+    fetch("http://localhost:4000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -51,7 +64,6 @@ const RegistrationPage = () => {
           Registration Page
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* Name Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Name
@@ -67,7 +79,6 @@ const RegistrationPage = () => {
             />
           </div>
 
-          {/* Email Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Email
@@ -83,7 +94,6 @@ const RegistrationPage = () => {
             />
           </div>
 
-          {/* Password Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Password
@@ -99,7 +109,6 @@ const RegistrationPage = () => {
             />
           </div>
 
-          {/* Country Dropdown */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Country
@@ -120,7 +129,6 @@ const RegistrationPage = () => {
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
@@ -129,7 +137,6 @@ const RegistrationPage = () => {
           </button>
         </form>
 
-        {/* Redirect to Login */}
         <p className="mt-4 text-sm text-gray-600 text-center">
           Have an account?{" "}
           <a

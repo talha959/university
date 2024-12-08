@@ -1,6 +1,48 @@
-import React from "react";
+import React, { use } from "react";
+import Cookies from "js-cookie";
+
 
 const UserInfoPage = ({  }) => {
+  const [users, setUsers] = React.useState(null);
+
+  React.useEffect(() => {
+    
+    const getAndDecodeToken = () => {
+      const token = Cookies.get("token");
+      if (!token) {
+        console.error("No token found in cookies.");
+        return null;
+      }
+    
+      try {
+        const payload = token.split(".")[1];
+        const decoded = JSON.parse(atob(payload));
+        console.log("Decoded Token:", decoded?.existingUser?._id);
+        fetch(`http://localhost:4000/api/info/${decoded?.existingUser?._id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setUsers(data);
+            console.log("User data:", data);
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          }
+        )
+        return decoded;
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+      }
+    };
+    getAndDecodeToken();
+  }, [])
+  
     const user={
         "_id": "675296223270461f513c6505",
         "name": "talha",
@@ -20,32 +62,32 @@ const UserInfoPage = ({  }) => {
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Name</label>
-          <p className="mt-1 text-gray-600">{user.name}</p>
+          <p className="mt-1 text-gray-600">{users?.name}</p>
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Email</label>
-          <p className="mt-1 text-gray-600">{user.email}</p>
+          <p className="mt-1 text-gray-600">{users?.email}</p>
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Country</label>
-          <p className="mt-1 text-gray-600">{user.country}</p>
+          <p className="mt-1 text-gray-600">{users?.country}</p>
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Role</label>
-          <p className="mt-1 text-gray-600">{user.role}</p>
+          <p className="mt-1 text-gray-600">{users?.role}</p>
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Created At</label>
-          <p className="mt-1 text-gray-600">{new Date(user.createdAt).toLocaleString()}</p>
+          <p className="mt-1 text-gray-600">{new Date(users?.createdAt).toLocaleString()}</p>
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Updated At</label>
-          <p className="mt-1 text-gray-600">{new Date(user.updatedAt).toLocaleString()}</p>
+          <p className="mt-1 text-gray-600">{new Date(users?.updatedAt).toLocaleString()}</p>
         </div>
 
         <div className="mt-6 text-center">
@@ -55,7 +97,29 @@ const UserInfoPage = ({  }) => {
           >
             Edit Profile
           </a>
+          <a></a>
         </div>
+        <button
+        onClick={async () => {
+          try {
+          const response = await fetch('http://localhost:4000/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+            application: 'application/json',
+          });
+          if (response.ok) {
+            window.location.href = '/login';
+          } else {
+            console.error('Logout failed');
+          }
+          } catch (error) {
+          console.error('Error:', error);
+          }
+        }}
+        className="ml-4 text-red-500 hover:underline focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+        >
+        Logout
+        </button>
       </div>
     </div>
   );

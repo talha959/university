@@ -95,7 +95,8 @@ export const logout = Trycatch(async (req, res) => {
 
 export const userInformation = Trycatch(async (req, res) => {
     try {
-        const user = await User.findById(req.email.id).select("-password");
+        const dataId=req.params.id;
+        const user = await User.findById(dataId).select("-password");
         res.status(200).json(user);
     } catch (error) {
         console.error(`Error: ${error.message}`);

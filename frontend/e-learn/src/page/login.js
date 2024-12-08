@@ -15,11 +15,33 @@ const LoginPage = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Login Data:", formData);
-    // Perform login API call here
-    // Example:
-    // fetch("/api/login", { method: "POST", body: JSON.stringify(formData) })
+    e.preventDefault(); // Prevents the default form submission
+    console.log("Form data:", formData);
+    fetch("http://localhost:4000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData), // Sends the form data as a JSON payload
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Login successful:", data?.token);
+        if (data?.token) {
+          console.log("Login successful:", data.token);
+    
+          // Set the token in a cookie
+            document.cookie = `token=${data.token}; path=/; max-age=${24 * 60 * 60}`; // Cookie valid for 1 day
+        } else {
+          console.error("Login failed: No token received");
+        }
+    
+        // Add success handling logic here
+      })
+      .catch((error) => {
+        console.error("Error during login:", error);
+        // Add error handling logic here
+      });
   };
 
   return (

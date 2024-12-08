@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./database/db.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 dotenv.config();
 const port = process.env.PORT;
 const app = express();
@@ -15,6 +16,8 @@ import courseRoute from './routes/course.js'
 import adminRoutes from './routes/admin.js'
 import enrollRoutes from './routes/EnrollCourse.js'
 import detailsRoutes from './routes/details.js'
+app.use(cors());
+app.use(cookieParser());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", userRoutes);
