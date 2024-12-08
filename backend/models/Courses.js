@@ -13,21 +13,17 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    createdBy: {
-        type: String,
-        required: true
-    },
     duration: {
         type: String,
-        required: true
-    },
-    price: {
-        type: Number,
         required: true
     },
     image: {
         type: String,
         required: true
+    },
+    createBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"	
     },
     createdAt: {
         type: Date,

@@ -4,7 +4,8 @@ import {
     logout,
     userInformation,
     updatePassword,
-    deleteUser
+    deleteUser,
+    role
  } from "../controllers/user.js";
 
  import { isAuth } from "../middleware/auth.js";
@@ -24,4 +25,5 @@ router.post("/logout",isAuth, logout);
 router.get("/info/:id",isAuth, userInformation);
 router.put("/updatePassword",isAuth, updatePassword);
 router.delete("/delete",isAuth, deleteUser);
+router.get("/role",isAuth, role);
 export default router;

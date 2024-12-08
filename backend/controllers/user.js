@@ -140,3 +140,17 @@ export const deleteUser = Trycatch(async (req, res) => {
     }
 }
 );
+
+export const role = Trycatch(async (req, res) => {
+    try {
+        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+        console.log("Token:", token);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the JWT token
+        console.log("Decoded Token:", decoded?.existingUser?.role);
+        res.status(200).json({ role: decoded?.existingUser?.role });
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        res.status(500).send("Server Error");
+    }
+}
+);

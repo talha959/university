@@ -1,30 +1,89 @@
 import React, { useState } from "react";
-
-const sampleCourseData = {
-  title: "Introduction to Programming",
-  description: "Learn the basics of programming in this course",
-  category: "Programming",
-  createdBy: "AdminUserId",
-  duration: "10 hours",
-  price: 49.99,
-  image: "https://i.ibb.co/bLgqjmd/Screenshot-3.png",
-};
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const CreateCoursePage = () => {
-  const [formData, setFormData] = useState(sampleCourseData);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    duration: "",
+    // price: "",
+    image: "",
+  });
   const [createdCourse, setCreatedCourse] = useState(null);
+  const [error, setError] = useState(null);
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const CLOUD_NAME = "dq12srhfg";
+  const UPLOAD_PRESET = "your_upload_preset"; // Replace with your upload preset
+  const token = Cookies.get("token");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    console.log(formData);
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+
+    const uploadFormData = new FormData();
+    uploadFormData.append("file", file);
+    uploadFormData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      setUploading(true);
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`,
+        uploadFormData
+      );
+      setFormData({ ...formData, image: response.data.secure_url });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Here you would make an API call to save the course
-    console.log("Course Created:", formData);
-    setCreatedCourse(formData);
+    if (!formData.image) {
+      alert("Please upload a thumbnail image.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/api/create-course", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create course");
+      }
+
+      const data = await response.json();
+      console.log("Course Created:", data);
+      setCreatedCourse(data);
+    } catch (error) {
+      console.error("Error:", error);
+      setError(error.message);
+    }
   };
 
   return (
@@ -65,17 +124,6 @@ const CreateCoursePage = () => {
           />
         </div>
         <div>
-          <label className="block font-medium">Created By</label>
-          <input
-            type="text"
-            name="createdBy"
-            value={formData.createdBy}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        <div>
           <label className="block font-medium">Duration</label>
           <input
             type="text"
@@ -87,26 +135,16 @@ const CreateCoursePage = () => {
           />
         </div>
         <div>
-          <label className="block font-medium">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Image URL</label>
-          <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required
-          />
+          <label className="block font-medium">Thumbnail</label>
+          <input type="file" onChange={handleFileChange} className="mb-2" />
+          <button
+            type="button"
+            onClick={handleUpload}
+            className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
         </div>
         <button
           type="submit"
@@ -116,23 +154,17 @@ const CreateCoursePage = () => {
         </button>
       </form>
 
+      {error && (
+        <div className="mt-4 p-4 border rounded bg-red-100 text-red-700">
+          <p>Error: {error}</p>
+        </div>
+      )}
+
       {createdCourse && (
         <div className="mt-8 p-4 border rounded shadow-lg">
           <h2 className="text-2xl font-bold">Course Created Successfully!</h2>
           <p className="mt-2">
             <strong>Title:</strong> {createdCourse.title}
-          </p>
-          <p>
-            <strong>Description:</strong> {createdCourse.description}
-          </p>
-          <p>
-            <strong>Category:</strong> {createdCourse.category}
-          </p>
-          <p>
-            <strong>Duration:</strong> {createdCourse.duration}
-          </p>
-          <p>
-            <strong>Price:</strong> ${createdCourse.price}
           </p>
           <img
             src={createdCourse.image}
