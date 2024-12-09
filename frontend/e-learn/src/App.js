@@ -15,8 +15,21 @@ import User from './page/user';
 import ProtectedRoute from './ProtectedRoute';
 import Cookies from "js-cookie";
 import AdminCoursesListPage from './page/AdminCreatedCourse';
+import AddLecturePage from './page/AddLecture';
+import UserInfo from './UserComp/userInfo';
+import Courses from './UserComp/Courses';
+import Lecture from './UserComp/Lecture';
 function App() {
   const token = Cookies.get('token');
+  const decodedToken = token ? JSON.parse(atob(token.split('.')[1])) : null;
+  const [role, setRole] = React.useState(null);
+  React.useEffect(() => {
+    if (decodedToken) {
+      setRole(decodedToken.existingUser.role);
+      console.log(decodedToken.existingUser.role);
+    }
+  }, [decodedToken]);
+  console.log(token);
   console.log(token)
   return (
     <div>
@@ -29,18 +42,16 @@ function App() {
             </>
           ) : (
             <>
-              <Route path='/UserInfoPage' element={<UserInfoPage/>}/>
-              <Route path='/admin' element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>}/>
-              <Route path='/user' element={<ProtectedRoute role="user"><User /></ProtectedRoute>}/>
-              <Route path='/UpdatePasswordPage' element={<UpdatePasswordPage/>}/>
-              <Route path='/LectureListPage' element={<LectureListPage/>}/>
-              <Route path='/LectureDetailsPage/:id' element={<LectureDetailsPage/>}/>
-              <Route path='/CreateCoursePage' element={<CreateCoursePage/>}/>
-              <Route path='/LectureNotes' element={<LectureNotes/>}/>
-              <Route path='/CreateLecturePage' element={<CreateLecturePage/>}/>
-              <Route path='/AdminCoursesListPage' element={<AdminCoursesListPage/>}/>
+              <Route path='/user' element={<ProtectedRoute role="user"><User /></ProtectedRoute>} />
+              <Route path='/UpdatePasswordPage' element={<UpdatePasswordPage />} />
+              {role ==='admin' && <><Route path='/UserInfoPage' element={<UserInfoPage />} /><Route path='/admin' element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} /><Route path='/LectureDetailsPage/:id' element={<ProtectedRoute role="admin"  ><LectureDetailsPage /></ProtectedRoute>} /><Route path='/CreateCoursePage' element={<ProtectedRoute role="admin" ><CreateCoursePage /></ProtectedRoute>} /><Route path='/AddLecturePage/:id' element={<ProtectedRoute role="admin"><AddLecturePage /></ProtectedRoute>} /><Route path='/CreateLecturePage' element={<ProtectedRoute role="admin"><CreateLecturePage /></ProtectedRoute>} /><Route path='/AdminCoursesListPage' element={<ProtectedRoute role="admin"><AdminCoursesListPage /></ProtectedRoute>} /></>}
+              {role!=='admin' && <><Route path='/LectureListPage' element={<LectureListPage />} /><Route path='/LectureNotes' element={<LectureNotes />} />
+              <Route path='/UserInfo' element={<UserInfo />} />
+              </>}
             </>
           )}
+          <Route path="/course" element={<Courses />} />
+          <Route path="/lecture/:id" element={<Lecture />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

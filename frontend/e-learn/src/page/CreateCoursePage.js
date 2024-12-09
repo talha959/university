@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
 
 const CreateCoursePage = () => {
   const [formData, setFormData] = useState({
@@ -87,7 +89,7 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <><Header /><div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">Create Course</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -98,8 +100,7 @@ const CreateCoursePage = () => {
             value={formData.title}
             onChange={handleChange}
             className="border p-2 rounded w-full"
-            required
-          />
+            required />
         </div>
         <div>
           <label className="block font-medium">Description</label>
@@ -109,8 +110,7 @@ const CreateCoursePage = () => {
             onChange={handleChange}
             className="border p-2 rounded w-full"
             rows="4"
-            required
-          />
+            required />
         </div>
         <div>
           <label className="block font-medium">Category</label>
@@ -120,8 +120,7 @@ const CreateCoursePage = () => {
             value={formData.category}
             onChange={handleChange}
             className="border p-2 rounded w-full"
-            required
-          />
+            required />
         </div>
         <div>
           <label className="block font-medium">Duration</label>
@@ -131,8 +130,7 @@ const CreateCoursePage = () => {
             value={formData.duration}
             onChange={handleChange}
             className="border p-2 rounded w-full"
-            required
-          />
+            required />
         </div>
         <div>
           <label className="block font-medium">Thumbnail</label>
@@ -169,11 +167,12 @@ const CreateCoursePage = () => {
           <img
             src={createdCourse.image}
             alt={createdCourse.title}
-            className="mt-4 w-full max-w-md rounded-lg"
-          />
+            className="mt-4 w-full max-w-md rounded-lg" />
         </div>
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 

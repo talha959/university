@@ -1,143 +1,33 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Box, Typography, Button, Card, CardContent, Grid } from "@mui/material";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const User = () => {
-  const [activePage, setActivePage] = useState("dashboard");
-
-  // Data for dashboard cards
-  const dashboardData = [
-    { title: "Total Users", value: 120 },
-    { title: "Projects", value: 45 },
-    { title: "Revenue", value: "$15,000" },
-    { title: "Tasks Completed", value: 85 },
-  ];
-
-  // Navigation handler
-  const handleNavigation = (page) => {
-    setActivePage(page);
-  };
+  const navigate = useNavigate();
 
   return (
-    <Router>
-      <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#f9f9f9" }}>
-        {/* Sidebar */}
-        <Box
-          sx={{
-            width: "250px",
-            backgroundColor: "#282c34",
-            color: "#fff",
-            padding: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            My Dashboard
-          </Typography>
-          <Button
-            component={Link}
-            to="/"
-            onClick={() => handleNavigation("dashboard")}
-            sx={{
-              color: activePage === "dashboard" ? "#00bcd4" : "#fff",
-              textAlign: "left",
-            }}
-          >
-            Dashboard
-          </Button>
-          <Button
-            component={Link}
-            to="/analytics"
-            onClick={() => handleNavigation("analytics")}
-            sx={{
-              color: activePage === "analytics" ? "#00bcd4" : "#fff",
-              textAlign: "left",
-            }}
-          >
-            Analytics
-          </Button>
-          <Button
-            component={Link}
-            to="/settings"
-            onClick={() => handleNavigation("settings")}
-            sx={{
-              color: activePage === "settings" ? "#00bcd4" : "#fff",
-              textAlign: "left",
-            }}
-          >
-            Settings
-          </Button>
-        </Box>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      {/* Header */}
+      <h1 className="text-4xl font-bold text-gray-800 mb-6">
+        User - Create Lecture
+      </h1>
 
-        {/* Main Content */}
-        <Box sx={{ flexGrow: 1, padding: "20px" }}>
-          <Routes>
-            {/* Dashboard Page */}
-            <Route
-              path="/"
-              element={
-                <Box>
-                  <Typography variant="h4" sx={{ marginBottom: "20px" }}>
-                    Dashboard
-                  </Typography>
-                  <Grid container spacing={3}>
-                    {dashboardData.map((item, index) => (
-                      <Grid item xs={12} sm={6} md={3} key={index}>
-                        <Card
-                          sx={{
-                            padding: "20px",
-                            backgroundColor: "#fff",
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                          }}
-                        >
-                          <CardContent>
-                            <Typography variant="h6">{item.title}</Typography>
-                            <Typography
-                              variant="h4"
-                              sx={{ fontWeight: "bold", color: "#00bcd4" }}
-                            >
-                              {item.value}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              }
-            />
+      {/* Content */}
+      <div className="w-full max-w-md p-6 bg-white shadow-md rounded-lg">
+        <p className="text-gray-600 text-lg mb-4 text-center">
+          Manage and create lectures for your courses.
+        </p>
 
-            {/* Analytics Page */}
-            <Route
-              path="/analytics"
-              element={
-                <Box>
-                  <Typography variant="h4" sx={{ marginBottom: "20px" }}>
-                    Analytics
-                  </Typography>
-                  <Typography>Coming Soon: Detailed analytics for your data.</Typography>
-                </Box>
-              }
-            />
-
-            {/* Settings Page */}
-            <Route
-              path="/settings"
-              element={
-                <Box>
-                  <Typography variant="h4" sx={{ marginBottom: "20px" }}>
-                    Settings
-                  </Typography>
-                  <Typography>Manage your preferences here.</Typography>
-                </Box>
-              }
-            />
-          </Routes>
-        </Box>
-      </Box>
-    </Router>
+        {/* Button */}
+        <div className="flex justify-center">
+          <button
+            className="px-6 py-3 bg-blue-500 text-white font-medium rounded-md shadow hover:bg-blue-600 focus:outline-none"
+            onClick={() => navigate("/AdminCoursesListPage")}
+          >
+            Go to Course List
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 
-const LectureDetailsPage = () => {
+const Lecture = () => {
   const [lectures, setLectures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -90,4 +90,4 @@ const LectureDetailsPage = () => {
   );
 };
 
-export default LectureDetailsPage;
+export default Lecture;

@@ -1,32 +1,19 @@
 import React, { useState } from "react";
 import {
-    Document,
-    Page,
-    Text,
-    StyleSheet,
-    View,
-    PDFViewer,
-  } from "@react-pdf/renderer";
+  Document,
+  Page,
+  Text,
+  View,
+  PDFViewer,
+} from "@react-pdf/renderer";
+import Head from "../UserComp/Head";
+
+import Footer from "../UserComp/Footer";
+
 const LectureNotes = () => {
   const [query, setQuery] = useState("");
   const [notes, setNotes] = useState(""); // To handle the single-text output
   const [loading, setLoading] = useState(false);
-
-
-  const styles = StyleSheet.create({
-    page: {
-      backgroundColor: "white",
-      color: "black",
-    },
-    section: {
-      margin: 10,
-      padding: 10,
-    },
-    viewer: {
-      width: window.innerWidth * 2, //the pdf viewer will take up all of the width and height
-      height: window.innerHeight * 2,
-    },
-  });
 
   const fetchNotes = async () => {
     setLoading(true);
@@ -74,7 +61,7 @@ const LectureNotes = () => {
       const data = await response.json();
       console.log("Generated notes:", data?.candidates?.[0]?.content?.parts?.[0]?.text);
       const generatedText =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text || "No content generated"; // Ensure safe access
+        data?.candidates?.[0]?.content?.parts?.[0]?.text || "No content generated"; // Ensure safe access
       setNotes(generatedText);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -85,38 +72,28 @@ const LectureNotes = () => {
   };
 
   return (
-    <div >
-      <h1>Generate Lecture Notes</h1>
+    <><Head /><div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">AI Lecture Notes Generator</h1>
       <input
         type="text"
         placeholder="Enter course query..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        style={{
-          padding: "10px",
-          fontSize: "16px",
-          width: "300px",
-          marginBottom: "10px",
-        }}
-      />
+        className="p-2 text-lg w-72 mb-4 border border-gray-300 rounded" />
       <button
         onClick={fetchNotes}
         disabled={!query || loading}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: "pointer",
-        }}
+        className={`p-2 text-lg rounded ${loading ? "bg-gray-400" : "bg-blue-500 text-white"} cursor-pointer`}
       >
         {loading ? "Loading..." : "Generate Notes"}
       </button>
 
-      <div style={{ marginTop: "20px" }} className=" w-96  h-96" >
+      <div className="mt-4 w-full h-96">
         {notes ? (
-          <PDFViewer  >
+          <PDFViewer className="w-full h-full">
             <Document>
-              <Page size="A4" style={styles.page} >
-                <View style={styles.section} >
+              <Page size="A4" style={{ backgroundColor: "white", color: "black" }}>
+                <View style={{ margin: 10, padding: 10 }}>
                   <Text>{notes}</Text>
                 </View>
               </Page>
@@ -126,7 +103,7 @@ const LectureNotes = () => {
           !loading && <p>No notes generated yet.</p>
         )}
       </div>
-    </div>
+    </div><Footer /></>
   );
 };
 

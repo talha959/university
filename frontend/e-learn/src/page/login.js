@@ -31,7 +31,7 @@ const LoginPage = () => {
           console.log("Login successful:", data.token);
           // Set the token in a cookie
           document.cookie = `token=${data.token}; path=/; max-age=${24 * 60 * 60}`; // Cookie valid for 1 day
-          window.location.reload(); // Reload the page to reflect the login status
+            window.location.href = "/userinfoPage"; // Navigate to the user info page
         } else {
           console.error("Login failed: No token received");
         }

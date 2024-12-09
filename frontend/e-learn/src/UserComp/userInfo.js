@@ -1,8 +1,8 @@
 import React, { use } from "react";
 import Cookies from "js-cookie";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
-const UserInfoPage = ({  }) => {
+import Head from "./Head";
+import Footer from "./Footer";
+const UserInfo = ({  }) => {
   const [users, setUsers] = React.useState(null);
   const [tokens, setTokens] = React.useState(null);
   React.useEffect(() => {
@@ -55,7 +55,7 @@ const UserInfoPage = ({  }) => {
     //     "__v": 0
     // }
   return (
-    <><Header /><div className="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
+    <><Head /><div className="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
       <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           User Information
@@ -136,4 +136,4 @@ const UserInfoPage = ({  }) => {
   );
 };
 
-export default UserInfoPage;
+export default UserInfo;
