@@ -47,7 +47,12 @@ const AdminCoursesListPage = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile && !selectedFile.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+    setFile(selectedFile);
   };
 
   const handleUpload = async () => {
@@ -73,7 +78,8 @@ const AdminCoursesListPage = () => {
     }
   };
 
-  const updateCourse = async () => {
+  const updateCourse = async (e) => {
+    e.preventDefault();
     try {
       const imageUrl = file ? await handleUpload() : editingCourse.image;
 
@@ -94,6 +100,7 @@ const AdminCoursesListPage = () => {
 
       setEditingCourse(null);
       fetchCourses(); // Refresh course list
+      setCourses({})
     } catch (error) {
       console.error("Error updating course:", error);
       alert("Failed to update the course. Please try again.");
@@ -175,7 +182,7 @@ const AdminCoursesListPage = () => {
             <input
               type="text"
               className="w-full p-2 mb-4 border rounded"
-              value={updatedCourse.title || editingCourse.title}
+              value={updatedCourse.title }
               onChange={(e) =>
                 setUpdatedCourse({ ...updatedCourse, title: e.target.value })
               }
@@ -183,7 +190,7 @@ const AdminCoursesListPage = () => {
             <label className="block mb-2">Description:</label>
             <textarea
               className="w-full p-2 mb-4 border rounded"
-              value={updatedCourse.description || editingCourse.description}
+              value={updatedCourse.description }
               onChange={(e) =>
                 setUpdatedCourse({
                   ...updatedCourse,
@@ -195,7 +202,7 @@ const AdminCoursesListPage = () => {
             <input
               type="text"
               className="w-full p-2 mb-4 border rounded"
-              value={updatedCourse.category || editingCourse.category}
+              value={updatedCourse.category }
               onChange={(e) =>
                 setUpdatedCourse({ ...updatedCourse, category: e.target.value })
               }
@@ -204,7 +211,7 @@ const AdminCoursesListPage = () => {
             <input
               type="text"
               className="w-full p-2 mb-4 border rounded"
-              value={updatedCourse.duration || editingCourse.duration}
+              value={updatedCourse.duration }
               onChange={(e) =>
                 setUpdatedCourse({ ...updatedCourse, duration: e.target.value })
               }

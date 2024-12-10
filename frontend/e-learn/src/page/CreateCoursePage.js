@@ -29,8 +29,17 @@ const CreateCoursePage = () => {
   };
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile && !selectedFile.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+    setFile(selectedFile);
   };
+
+  // const handleFileChange = (event) => {
+  //   setFile(event.target.files[0]);
+  // };
 
   const handleUpload = async () => {
     if (!file) {
@@ -89,89 +98,110 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <><Header /><div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-6">Create Course</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-medium">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required />
-        </div>
-        <div>
-          <label className="block font-medium">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            rows="4"
-            required />
-        </div>
-        <div>
-          <label className="block font-medium">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required />
-        </div>
-        <div>
-          <label className="block font-medium">Duration</label>
-          <input
-            type="text"
-            name="duration"
-            value={formData.duration}
-            onChange={handleChange}
-            className="border p-2 rounded w-full"
-            required />
-        </div>
-        <div>
-          <label className="block font-medium">Thumbnail</label>
-          <input type="file" onChange={handleFileChange} className="mb-2" />
+    <>
+      <Header />
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold mb-6">Create Course</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block font-medium">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+              rows="4"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Category</label>
+            <input
+              type="text"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Duration</label>
+            <input
+              type="text"
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Thumbnail</label>
+            <input type="file" onChange={handleFileChange} className="mb-2" />
+            <button
+              type="button"
+              onClick={handleUpload}
+              className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
+              disabled={uploading}
+            >
+              {uploading ? "Uploading..." : "Upload"}
+            </button>
+          </div>
           <button
-            type="button"
-            onClick={handleUpload}
-            className="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600"
-            disabled={uploading}
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           >
-            {uploading ? "Uploading..." : "Upload"}
+            Create Course
           </button>
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
-          Create Course
-        </button>
-      </form>
+        </form>
 
-      {error && (
-        <div className="mt-4 p-4 border rounded bg-red-100 text-red-700">
-          <p>Error: {error}</p>
-        </div>
-      )}
+        {error && (
+          <div className="mt-4 p-4 border rounded bg-red-100 text-red-700">
+            <p>Error: {error}</p>
+          </div>
+        )}
 
-      {createdCourse && (
-        <div className="mt-8 p-4 border rounded shadow-lg">
-          <h2 className="text-2xl font-bold">Course Created Successfully!</h2>
-          <p className="mt-2">
-            <strong>Title:</strong> {createdCourse.title}
-          </p>
-          <img
-            src={createdCourse.image}
-            alt={createdCourse.title}
-            className="mt-4 w-full max-w-md rounded-lg" />
-        </div>
-      )}
-    </div>
-    <Footer />
+        {createdCourse && (
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            onClick={() => setCreatedCourse(null)}
+          >
+            <div
+              className="bg-white p-8 rounded shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl font-bold">Course Created Successfully!</h2>
+              <p className="mt-2">
+                <strong>Title:</strong> {createdCourse.title}
+              </p>
+              <img
+                src={createdCourse.image}
+                alt={createdCourse.title}
+                className="mt-4 w-full max-w-md rounded-lg"
+              />
+              <button
+                className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                onClick={() => setCreatedCourse(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      <Footer />
     </>
   );
 };

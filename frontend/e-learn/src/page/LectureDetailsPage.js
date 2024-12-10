@@ -16,7 +16,11 @@ const LectureDetailsPage = () => {
         setLoading(false);
       } catch (err) {
         console.error(err);
-        setError("Failed to fetch lectures");
+        if (err.response && err.response.status === 404) {
+          setError("No lecture found");
+        } else {
+          setError("Failed to fetch lectures");
+        }
         setLoading(false);
       }
     };

@@ -75,12 +75,6 @@ const Lecture = () => {
                 </p>
               </div>
               <div className="mt-6 items-center">
-                <button
-                  onClick={() => handleDelete(lecture._id)}
-                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                >
-                  Delete
-                </button>
               </div>
             </div>
           </div>

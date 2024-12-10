@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -30,8 +31,22 @@ const LoginPage = () => {
         if (data?.token) {
           console.log("Login successful:", data.token);
           // Set the token in a cookie
-          document.cookie = `token=${data.token}; path=/; max-age=${24 * 60 * 60}`; // Cookie valid for 1 day
-            window.location.href = "/userinfoPage"; // Navigate to the user info page
+          document.cookie = `token=${data.token}; path=/; max-age=${24 * 60 * 60}`;
+          const token = Cookies.get('token');
+          const decodedToken = token ? JSON.parse(atob(token.split('.')[1])) : null;
+          if (decodedToken) {
+            console.log("Login successful:", decodedToken.existingUser.role);
+            if (decodedToken.existingUser.role === 'user') {
+              window.location.href = "/user"; // Navigate to the admin page
+            }
+          if (decodedToken.existingUser.role === 'admin') {
+            window.location.href = "/admin"; // Navigate to the admin page
+          }
+        }
+          // else{
+
+          // }
+            // window.location.href = "/userinfoPage"; // Navigate to the user info page
         } else {
           console.error("Login failed: No token received");
         }

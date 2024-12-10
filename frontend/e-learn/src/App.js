@@ -12,6 +12,7 @@ import CreateLecturePage from './page/CreateLecturePage';
 import LectureNotes from './page/LectureNotes';
 import Admin from './page/admin';
 import User from './page/user';
+import Editor from './page/Editor';
 import ProtectedRoute from './ProtectedRoute';
 import Cookies from "js-cookie";
 import AdminCoursesListPage from './page/AdminCreatedCourse';
@@ -19,6 +20,7 @@ import AddLecturePage from './page/AddLecture';
 import UserInfo from './UserComp/userInfo';
 import Courses from './UserComp/Courses';
 import Lecture from './UserComp/Lecture';
+import HomePage from './HomePage';
 function App() {
   const token = Cookies.get('token');
   const decodedToken = token ? JSON.parse(atob(token.split('.')[1])) : null;
@@ -35,6 +37,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<HomePage />} />
           {!token ? (
             <>
               <Route path="/register" element={<RegistrationPage />} />
@@ -46,7 +49,9 @@ function App() {
               <Route path='/UpdatePasswordPage' element={<UpdatePasswordPage />} />
               {role ==='admin' && <><Route path='/UserInfoPage' element={<UserInfoPage />} /><Route path='/admin' element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} /><Route path='/LectureDetailsPage/:id' element={<ProtectedRoute role="admin"  ><LectureDetailsPage /></ProtectedRoute>} /><Route path='/CreateCoursePage' element={<ProtectedRoute role="admin" ><CreateCoursePage /></ProtectedRoute>} /><Route path='/AddLecturePage/:id' element={<ProtectedRoute role="admin"><AddLecturePage /></ProtectedRoute>} /><Route path='/CreateLecturePage' element={<ProtectedRoute role="admin"><CreateLecturePage /></ProtectedRoute>} /><Route path='/AdminCoursesListPage' element={<ProtectedRoute role="admin"><AdminCoursesListPage /></ProtectedRoute>} /></>}
               {role!=='admin' && <><Route path='/LectureListPage' element={<LectureListPage />} /><Route path='/LectureNotes' element={<LectureNotes />} />
-              <Route path='/UserInfo' element={<UserInfo />} />
+              <Route path='/UserInfo' element={<UserInfo />}
+               />
+                             <Route path='/editor' element={<Editor />} />
               </>}
             </>
           )}

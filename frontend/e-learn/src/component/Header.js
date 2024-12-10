@@ -10,6 +10,7 @@ const Header = () => {
             <li><a href="/UserInfoPage" className="hover:text-gray-200">User-Info</a></li>
             <li><a href="/AdminCoursesListPage" className="hover:text-gray-200">Course-List</a></li>
             <li><a href="/CreateCoursePage" className="hover:text-gray-200">Create-Course</a></li>
+            <li><a href="/UpdatePasswordPage" className="hover:text-gray-200">Update-Password</a></li>
             {/* <li><a href="#contact" className="hover:text-gray-200">Contact</a></li> */}
           </ul>
         </nav>

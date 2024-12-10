@@ -19,7 +19,15 @@ const AddLecturePage = () => {
   const UPLOAD_PRESET = "your_upload_preset"; // Replace with your Cloudinary upload preset
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    const validVideoTypes = ["video/mp4", "video/webm", "video/ogg"];
+    
+    if (selectedFile && validVideoTypes.includes(selectedFile.type)) {
+      setFile(selectedFile);
+    } else {
+      alert("Please select a valid video file (mp4, webm, ogg).");
+      event.target.value = null; // Clear the input
+    }
   };
 
   const handleInputChange = (e) => {

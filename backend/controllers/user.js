@@ -108,7 +108,13 @@ export const userInformation = Trycatch(async (req, res) => {
 export const updatePassword = Trycatch(async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
-        const user = await User.findById(req.email.id); 
+        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the JWT token
+        console.log("Token:", token);
+        const user = await User.findById(decoded?.existingUser?._id); 
+        if (!user) {
+            return res.status(400).json("User not found");
+        }
         const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
         if (!isPasswordCorrect) {
             return res.status(400).json("Old password is incorrect");

@@ -60,6 +60,7 @@ const RegistrationPage = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        window.location.href = "/login";
       })
       .catch((error) => {
         console.error("Error:", error);

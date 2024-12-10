@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-
+import Cookies from "js-cookie";
 const UpdatePasswordPage = () => {
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData({
       ...formData,
       [name]: value,
@@ -16,12 +19,44 @@ const UpdatePasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace this with actual API call to update password
-    console.log("Old Password:", formData.oldPassword);
-    console.log("New Password:", formData.newPassword);
+    try {
+      const token = Cookies.get('token');
+      const decodedToken = token ? JSON.parse(atob(token.split('.')[1])) : null;
+      const response = await fetch("http://localhost:4000/api/updatePassword", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,	
+        },
+        body: JSON.stringify({
+          oldPassword: formData.oldPassword,
+          newPassword: formData.newPassword,
+        }),
+      });
 
-    // Here, you can send the data to the backend to update the password
-    // Example: await updatePassword(formData.oldPassword, formData.newPassword);
+      if (!response.ok) {
+        throw new Error("Failed to update password.");
+      }
+
+      const result = await response.json();
+      console.log(result);
+      if(decodedToken.existingUser.role === 'admin'){
+        window.location.href = "/admin";}
+        if(decodedToken.existingUser.role === 'user'){
+          window.location.href = "/user";}
+      if (result.success) {
+        setSuccess(true);
+        setError(null);
+
+        
+      } else {
+        // setError(result.message || "Something went wrong.");
+        setSuccess(false);
+      }
+    } catch (error) {
+      setError(error.message);
+      setSuccess(false);
+    }
   };
 
   return (
@@ -68,6 +103,18 @@ const UpdatePasswordPage = () => {
             Update Password
           </button>
         </form>
+
+        {error && (
+          <p className="mt-4 text-sm text-red-600 text-center">
+            Error: {error}
+          </p>
+        )}
+
+        {success && (
+          <p className="mt-4 text-sm text-green-600 text-center">
+            Password updated successfully!
+          </p>
+        )}
 
         <p className="mt-4 text-sm text-gray-600 text-center">
           <a
